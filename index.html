@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoD Browser Cyber Scanner</title>
+    <script src="https://cdn.jsdelivr.net/npm/web-tree-sitter@0.24.7/tree-sitter.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.0/dist/sql-wasm.js"></script>
+    <style>
+        body { font-family: system-ui; margin: 20px; }
+        .upload-area { border: 2px dashed #ccc; padding: 20px; text-align: center; margin: 20px 0; }
+        .high { color: red; }
+        .medium { color: orange; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+    </style>
+</head>
+<body>
+    <h1>DoD Browser-Based Cybersecurity Scanner</h1>
+    <p><strong>100% Client-Side</strong> | Wasm + Browser SQLite | No data leaves your browser</p>
+
+    <div class="upload-area" id="dropZone">
+        Drop code files here or click to upload<br>
+        <input type="file" id="fileInput" multiple accept=".py,.js,.ts,.java,.go,.html">
+    </div>
+
+    <textarea id="codeInput" rows="10" style="width:100%;" placeholder="Or paste code here..."></textarea>
+    <br><br>
+    <button onclick="startScan()" style="padding:10px 20px; font-size:16px;">🚀 Scan for Vulnerabilities</button>
+
+    <div id="results"></div>
+    <div id="history"></div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
