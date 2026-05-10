@@ -4,20 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DoD Browser Cyber Scanner</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' https: 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https:;">
     <script src="https://cdn.jsdelivr.net/npm/web-tree-sitter@0.24.7/tree-sitter.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sql.js@1.10.0/dist/sql-wasm.js"></script>
     <style>
         body { font-family: system-ui; margin: 20px; }
         .upload-area { border: 2px dashed #ccc; padding: 20px; text-align: center; margin: 20px 0; }
-        .high { color: red; }
+        .high { color: red; font-weight: bold; }
         .medium { color: orange; }
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
+        .low { color: green; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
     </style>
 </head>
 <body>
     <h1>DoD Browser-Based Cybersecurity Scanner</h1>
-    <p><strong>100% Client-Side</strong> | Wasm + Browser SQLite | No data leaves your browser</p>
+    <p><strong>100% Client-Side • Wasm + Browser SQLite • No data leaves your browser</strong></p>
 
     <div class="upload-area" id="dropZone">
         Drop code files here or click to upload<br>
