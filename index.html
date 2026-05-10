@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoD Browser Cyber Scanner</title>
+    <style>
+        body { font-family: system-ui; margin: 20px; background: #0f172a; color: #e2e8f0; }
+        h1 { color: #60a5fa; }
+        .upload { border: 2px dashed #64748b; padding: 20px; text-align: center; margin: 20px 0; }
+        button { background: #3b82f6; color: white; padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-size: 1.1em; }
+        .finding { margin: 12px 0; padding: 15px; border-radius: 8px; border-left: 5px solid; }
+        .HIGH { background: #7f1d1d; border-color: #ef4444; }
+        .MEDIUM { background: #78350f; border-color: #f59e0b; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/web-tree-sitter@0.24.7/tree-sitter.js"></script>
+</head>
+<body>
+    <h1>🔒 DoD Browser Cybersecurity Scanner (Static Demo)</h1>
+    <p>100% client-side • Tree-sitter Wasm • Local History</p>
+
+    <div class="upload">
+        <input type="file" id="fileInput" multiple accept=".py,.js,.ts"><br><br>
+        <textarea id="codeInput" rows="12" style="width:100%;background:#1e2937;color:#e2e8f0;padding:12px;font-family:monospace;" placeholder="Paste vulnerable Python or JavaScript code here..."></textarea>
+    </div>
+
+    <button onclick="startScan()">🚀 Run Security Scan</button>
+
+    <div id="results" style="margin-top:30px;"></div>
+    <div id="history" style="margin-top:30px;"></div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
