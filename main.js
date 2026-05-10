@@ -1,6 +1,4 @@
-import { initDB, saveScan, loadHistory } from './db.js';
-import { getAllRules } from './rules.js';
-
+// Main scanner logic
 let parser;
 
 async function init() {
@@ -8,69 +6,67 @@ async function init() {
   const pythonLang = await TreeSitter.Language.load('https://cdn.jsdelivr.net/npm/tree-sitter-wasms@0.1.13/tree-sitter-python.wasm');
   parser = new TreeSitter();
   parser.setLanguage(pythonLang);
-  await initDB();
   renderHistory();
 }
 
 async function startScan() {
   const code = document.getElementById('codeInput').value.trim();
-  if (!code) {
-    alert('Please provide code to scan');
-    return;
-  }
+  if (!code) { alert('Please paste some code'); return; }
 
   const tree = parser.parse(code);
   const findings = [];
 
-  getAllRules().forEach(rule => {
-    try {
-      const query = parser.getLanguage().query(rule.query);
-      const matches = query.matches(tree.rootNode);
-      matches.forEach(m => {
-        findings.push({
-          id: rule.id,
-          severity: rule.severity,
-          message: rule.message,
-          line: m.captures[0]?.node.startPosition.row + 1 || 1,
-          fix: rule.fix
-        });
-      });
-    } catch(e) {}
+  const rules = [
+    { severity: 'HIGH', message: 'Potential Command Injection (os.system / exec)', pattern: /os\.system|subprocess\.call.*shell=True|exec\(/i },
+    { severity: 'HIGH', message: 'Potential XSS (innerHTML)', pattern: /\.innerHTML|document\.write/i },
+    { severity: 'MEDIUM', message: 'Hardcoded Secret', pattern: /password|api_key|secret.*=\s*['"].*['"]/i }
+  ];
+
+  rules.forEach(rule => {
+    const matches = [...code.matchAll(rule.pattern)];
+    matches.forEach((m, idx) => {
+      const line = (code.substring(0, m.index).match(/\n/g) || []).length + 1;
+      findings.push({severity: rule.severity, message: rule.message, line: line, snippet: m[0].substring(0,80)});
+    });
   });
 
-  const scanResult = {
+  const result = {
     timestamp: new Date().toISOString(),
     findings,
-    codeSnippet: code.substring(0, 300)
+    snippet: code.substring(0, 200)
   };
 
-  await saveScan(scanResult);
-  renderResults(scanResult);
+  saveScan(result);
+  renderResults(result);
   renderHistory();
 }
 
-function renderResults(scan) {
-  let html = `<h2>Scan Results (${scan.findings.length} findings)</h2>`;
-  if (scan.findings.length === 0) {
-    html += '<p style="color:green">✅ No vulnerabilities detected in this scan.</p>';
-  } else {
-    html += '<table><tr><th>Severity</th><th>Rule</th><th>Line</th><th>Message</th><th>Fix</th></tr>';
-    scan.findings.forEach(f => {
-      html += `<tr>
-        <td class="${f.severity.toLowerCase()}">${f.severity}</td>
-        <td>${f.id}</td>
-        <td>${f.line}</td>
-        <td>${f.message}</td>
-        <td>${f.fix}</td>
-      </tr>`;
-    });
-    html += '</table>';
-  }
+function renderResults(result) {
+  let html = `<h2>Scan Results (${result.findings.length} findings)</h2>`;
+  result.findings.forEach(f => {
+    html += `
+      <div class="finding ${f.severity}">
+        <strong>${f.severity}</strong> Line ${f.line}: ${f.message}<br>
+        <small>${f.snippet}</small>
+      </div>`;
+  });
+  if (result.findings.length === 0) html += '<p style="color:#4ade80;">✅ No high-risk issues detected in this scan.</p>';
   document.getElementById('results').innerHTML = html;
 }
 
+function saveScan(scan) {
+  let history = JSON.parse(localStorage.getItem('cyberScans') || '[]');
+  history.unshift(scan);
+  localStorage.setItem('cyberScans', JSON.stringify(history.slice(0, 10)));
+}
+
 function renderHistory() {
-  document.getElementById('history').innerHTML = '<p>Scan history stored locally in Browser SQLite.</p>';
+  const history = JSON.parse(localStorage.getItem('cyberScans') || '[]');
+  let html = '<h3>Recent Scans (local only)</h3>';
+  history.forEach((s, i) => {
+    html += `<p>${new Date(s.timestamp).toLocaleString()} — ${s.findings.length} findings</p>`;
+  });
+  document.getElementById('history').innerHTML = html;
 }
 
 window.onload = init;

@@ -1,19 +1,12 @@
-# DoD Browser Cyber Scanner
+# DoD Browser Cybersecurity Scanner
 
-Fully static, client-side vulnerability scanner for cybersecurity training and demos.
+**Fully static, browser-only security analysis tool**
 
-## Features
-- Tree-sitter Wasm AST parsing
-- Semgrep-style rules for common vulnerabilities
-- Browser SQLite for local scan history
+- Tree-sitter Wasm parsing
+- Semgrep-style pattern detection
+- Local history via localStorage
 - Zero server, zero data exfiltration
 
-Deployed via GitHub Pages.
+**Live**: https://dadsocstl.github.io/semgrep-browser-scanner/
 
-Live Demo: https://dadsocstl.github.io/semgrep-browser-scanner/
-
-**Aligned with NIST RMF, SP 800-190, and DoD DevSecOps.**
-
----
-
-Built for secure, browser-based security analysis.
+Aligned with NIST RMF / SP 800-190 / DoD DevSecOps.
